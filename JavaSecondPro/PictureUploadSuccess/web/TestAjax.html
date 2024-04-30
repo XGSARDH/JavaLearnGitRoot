@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>根据ID获取图片</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            border: 2px solid #333;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <input v-model="imageId" placeholder="输入图片ID" />
+    <button @click="fetchImageById">获取图片</button>
+    <img :src="imageUrl" v-if="imageUrl" alt="图片加载中...">
+</div>
+
+<script>
+    new Vue({
+        el: '#app',
+        data() {
+            return {
+                imageId: '',
+                imageUrl: ''
+            };
+        },
+        methods: {
+            async fetchImageById() {
+                if (!this.imageId) {
+                    alert('请输入图片ID');
+                    return;
+                }
+                try {
+                    const response = await axios({
+                        method: 'post',
+                        url: 'http://localhost:8080/PictureUploadSuccess_Web_exploded/ImageServlet', // 替换为你的后端地址
+                        data: `id=${this.imageId}`, // 发送URL编码的数据
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded' // 设置请求头以发送URL编码的表单数据
+                        },
+                        responseType: 'blob' // 预期服务器返回的数据类型
+                    });
+                    this.imageUrl = URL.createObjectURL(response.data);
+                } catch (error) {
+                    console.error('获取图片失败:', error);
+                    this.imageUrl = '';
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>
