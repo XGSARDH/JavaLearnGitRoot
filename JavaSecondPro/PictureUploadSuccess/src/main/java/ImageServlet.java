@@ -5,6 +5,7 @@ import java.io.*;
 
 @WebServlet("/ImageServlet")
 public class ImageServlet extends HttpServlet {
+    @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // 设置响应的类型为图片
         response.setContentType("image/jpg");
@@ -35,6 +36,7 @@ public class ImageServlet extends HttpServlet {
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error processing the image.");
         }
     }
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doGet(request, response);
     }
